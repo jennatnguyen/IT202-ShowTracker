@@ -12,6 +12,10 @@
         <input type="password" id="pw" name="password" required minlength="8" />
     </div>
     <div>
+        <label for="username">Username</label>
+        <input type="text" name="username" required maxlength="30" />
+    </div>
+    <div>
         <label for="confirm">Confirm</label>
         <input type="password" name="confirm" required minlength="8" />
     </div>
@@ -31,6 +35,7 @@
     $email = se($_POST,"email","",false);//$_POST["email"];
     $password = se($_POST,"password","",false); //$_POST["password"];
     $confirm = se($_POST,"confirm","",false);//$_POST["confirm"];
+    $username = se($_POST, "username", "", false);
     //TODO 3
     $hasError = false;
     if (empty($email)) {
@@ -65,14 +70,23 @@
         $hasError = true;
     }
 
+    if (!preg_match('/^[a-z0-9_-]{3,30}$/', $username)) {
+        flash(
+            "Username must be lowercase, alphanumerical, and can only contain _ or -",
+            "warning"
+        );
+        $hasError =true;
+        }
+    
+
     if(!$hasError) {
        // echo "Welcome, $email";
        //TODO 4
        $hash = password_hash($password, PASSWORD_BCRYPT);
        $db = getDB();
-       $stmt = $db->prepare("INSERT INTO Users(email, password) VALUES (:email, :password)");
+       $stmt = $db->prepare("INSERT INTO Users(email, password, username) VALUES (:email, :password, :username)");
        try{
-        $r = $stmt->execute([":email"=>$email, ":password"=>$hash]);
+        $r = $stmt->execute([":email"=>$email, ":password"=>$hash, "username" => $username]);
         echo "Successfully register!";
        }
        catch(Exception $e){
@@ -80,6 +94,6 @@
             echo "<pre>" . var_export($e, true) . "</pre>";
        }
     }
-
+ 
  }
 ?>
