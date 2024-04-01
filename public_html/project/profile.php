@@ -121,18 +121,44 @@ $username = get_username();
 
 <script>
     function validate(form) {
-        let pw = form.newPassword.value;
-        let con = form.confirmPassword.value;
-        let isValid = true;
+        let email = form.email.value.trim();
+        let username = form.username.value.trim();
+        let currentPassword = form.currentPassword.value;
+        let newPassword = form.newPassword.value;
+        let confirmPassword = form.confirmPassword.value;
         //TODO add other client side validation....
+        let isValid = true;
 
         //example of using flash via javascript
         //find the flash container, create a new element, appendChild
-        
-        if (pw !== con) {
-            flash("Password and Confrim password must match", "warning");
+         // Validate email
+        if (!isValidEmail(email)) {
+            flash("Invalid email address", "warning");
             isValid = false;
         }
+
+        // Validate username
+        if (!isValidUsername(username)) {
+            flash("Invalid username", "warning");
+            isValid = false;
+        }
+
+         // Check if all password fields are filled
+        if (currentPassword && newPassword && confirmPassword) {
+        // If all password fields are filled, proceed to validate
+        if (newPassword !== confirmPassword) {
+            flash("New passwords don't match", "warning");
+            isValid = false;
+        } else if (!isValidPassword(newPassword)) {
+            flash("Invalid Password", "warning");
+            isValid = false;
+        }
+        } else if (currentPassword || newPassword || confirmPassword) {
+        // If at least one password field is filled but not all three, show a warning
+        flash("Please fill all password fields", "warning");
+        isValid = false;
+        }
+        
         return isValid;
     }
 </script>

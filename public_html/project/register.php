@@ -25,8 +25,36 @@ reset_session();
     function validate(form) {
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
+        let email = form.email.value.trim();
+        let username = form.username.value.trim();
+        let password = form.password.value;
+        let confirm = form.confirm.value;
+        let isValid = true;
+        
+        if (!isValidEmail(email)) {
+            flash("Invalid email address");
+            isValid = false;
+        }
+        
+        // Validate username
+        if (!isValidUsername(username)) {
+            flash("Invalid Username");
+            isValid = false;
+        }
+        
+        // Validate password
+        if (!isValidPassword(password)) {
+            flash("Invalid Password");
+            isValid = false;
+        }
 
-        return true;
+        //confirm
+        if (password !== confirm) {
+            flash("Passwords do not match");
+            isValid = false;
+        }
+        
+        return isValid;
     }
 </script>
 <?php
@@ -34,12 +62,7 @@ reset_session();
 if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm"])) {
     $email = se($_POST, "email", "", false);
     $password = se($_POST, "password", "", false);
-    $confirm = se(
-        $_POST,
-        "confirm",
-        "",
-        false
-    );
+    $confirm = se($_POST, "confirm", "",false);
     $username = se($_POST, "username", "", false);
     //TODO 3
     $hasError = false;
