@@ -128,6 +128,7 @@ $username = get_username();
 
         //example of using flash via javascript
         //find the flash container, create a new element, appendChild
+        
         if (pw !== con) {
             flash("Password and Confrim password must match", "warning");
             isValid = false;
