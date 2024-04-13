@@ -1,0 +1,11 @@
+nav li{display: inline; background-color: white;} 
+nav li a{color: black}
+input{border-radius: 5%;}
+body{
+    background-color: black;
+    color: white;
+
+}
+.nav-link{
+    color: black !important;
+}
