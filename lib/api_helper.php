@@ -34,8 +34,8 @@ function _sendRequest($url, $key, $data = [], $method = 'GET', $extra_headers = 
         ];
     }
     if($extra_headers){
-        foreach($extra_headers as $h){
-            array_push($headers, $h);
+        foreach($extra_headers as $k=>$v){
+            $headers[$k] = $v;
         }
     }
     $callback = fn(string $k, string $v): string => "$k: $v";
