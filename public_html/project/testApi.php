@@ -40,6 +40,11 @@ if (isset($_GET["title"])) {
     }
 }
 
+$db = getDB();
+$opts = ["debug" => false, "update_duplicate" => true, "columns_to_update"=>[]];
+$query = insert("Shows", $result, $opts);
+var_export($query);
+
 ?>
 <div class="container-fluid">
     <h1>Show Info</h1>
@@ -54,19 +59,34 @@ if (isset($_GET["title"])) {
     
     <div class="row ">
         <?php if (isset($result)) : ?>
-            <?php foreach ($result as $show) : ?>
+            <?php foreach($result as $index=>$show) : ?>
+
+                <?php foreach($show as $key=>$value): ?>
                 <pre>
-                    <?php var_export($show);?>
+                    <?php var_export($show); 
+
+                        if($key === "release_date" && $value === "0000-00-00") {
+                            $result[$index][$key] = null;
+                        }
+
+                        $extra_headers["Type"] = "get-show-details";
+                        $data = ["imdb_id" => $show["imdb_id"], ];
+                        $query = insert("Shows", $result, $opts);
+                        var_export($query);
+                        ?>
                 </pre>
+                <?php endforeach; ?> <!-- inner foreach end -->
             <?php endforeach; ?> 
-           
         <?php endif; ?>
     </div>
 </div>
 <?php
 
-$db = getDB();
-$opts = ["debug" => false, "update_duplicate" => false, "columns_to_update"=>[]];
+
+/*$extra_headers["Type"] = "get-show-details";
+$data = ["imdb_id" => $_GET["imdb_id"], ];
+$result = get($endpoint, "SHOW_API_KEY", $data, $extra_headers, $isRapidAPI, $rapidAPIHost);
 $query = insert("Shows", $result, $opts);
-var_export($query);
+var_export($query);*/
+
 require(__DIR__ . "/../../partials/flash.php");
