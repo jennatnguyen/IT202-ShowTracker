@@ -14,7 +14,7 @@ require_once(__DIR__ . "/load_api_keys.php");
  * 
  * @return array The response status and body.
  */
-function _sendRequest($url, $key, $data = [], $method = 'GET', $isRapidAPI = true, $rapidAPIHost = "")
+function _sendRequest($url, $key, $data = [], $method = 'GET', $extra_headers = [], $isRapidAPI = true, $rapidAPIHost = "")
 {
     global $API_KEYS;
     // Check if the API key is set and not empty
@@ -24,7 +24,7 @@ function _sendRequest($url, $key, $data = [], $method = 'GET', $isRapidAPI = tru
     $headers = [];
     if ($isRapidAPI) {
         $headers = [
-            "Type" => "get-shows-by-title",
+            //"Type" => "get-shows-by-title",
             "X-RapidAPI-Host" => $rapidAPIHost,
             "X-RapidAPI-Key" => $API_KEYS[$key],
         ];
@@ -32,6 +32,11 @@ function _sendRequest($url, $key, $data = [], $method = 'GET', $isRapidAPI = tru
         $headers = [
             "x-api-key" => $API_KEYS[$key]
         ];
+    }
+    if($extra_headers){
+        foreach($extra_headers as $k=>$v){
+            $headers[$k] = $v;
+        }
     }
     $callback = fn(string $k, string $v): string => "$k: $v";
     $headers = array_map($callback, array_keys($headers), array_values($headers));
@@ -80,9 +85,9 @@ function _sendRequest($url, $key, $data = [], $method = 'GET', $isRapidAPI = tru
  * 
  * @return array The response status and body.
  */
-function get($url, $key, $data = [], $isRapidAPI = true, $rapidAPIHost = "")
+function get($url, $key, $data = [], $extra_headers = [], $isRapidAPI = true, $rapidAPIHost = "")
 {
-    return _sendRequest($url, $key, $data, 'GET', $isRapidAPI, $rapidAPIHost);
+    return _sendRequest($url, $key, $data, 'GET', $extra_headers, $isRapidAPI, $rapidAPIHost);
 }
 
 
@@ -97,8 +102,8 @@ function get($url, $key, $data = [], $isRapidAPI = true, $rapidAPIHost = "")
  * 
  * @return array The response status and body.
  */
-function post($url, $key, $data = [], $isRapidAPI = true,  $rapidAPIHost = "")
+function post($url, $key, $data = [], $extra_headers = [], $isRapidAPI = true,  $rapidAPIHost = "")
 {
-    return _sendRequest($url, $key, $data, 'POST', $isRapidAPI, $rapidAPIHost);
+    return _sendRequest($url, $key, $data, 'POST', $extra_headers, $isRapidAPI, $rapidAPIHost);
 }
 

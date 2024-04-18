@@ -8,7 +8,8 @@ if (isset($_GET["title"])) {
     $endpoint = "https://movies-tv-shows-database.p.rapidapi.com/";
     $isRapidAPI = true;
     $rapidAPIHost = "movies-tv-shows-database.p.rapidapi.com";
-    $result = get($endpoint, "SHOW_API_KEY", $data, $isRapidAPI, $rapidAPIHost);
+    $extra_headers["Type"] = "get-shows-by-title";
+    $result = get($endpoint, "SHOW_API_KEY", $data, $extra_headers, $isRapidAPI, $rapidAPIHost);
     //example of cached data to save the quotas, don't forget to comment out the get() if using the cached data for testing
     /* $result = ["status" => 200, "response" => '{
     "Global Quote": {
@@ -53,19 +54,42 @@ if (isset($_GET["title"])) {
     
     <div class="row ">
         <?php if (isset($result)) : ?>
-            <?php foreach ($result as $show) : ?>
+            <?php foreach($result as $index=>$show) : ?>
+
+                <?php foreach($show as $key=>$value): ?>
                 <pre>
-                    <?php var_export($show);?>
+                    <?php var_export($show); 
+
+                        if($key === "release_date" && $value === "0000-00-00") {
+                            $result[$index][$key] = null;
+                        }
+                        
+                     /*   //doing this makes the release date thing not work 
+                        $extra_headers["Type"] = "get-show-details";
+                        $data = ["id" => $show["imdb_id"], ];
+                        $opts = ["debug" => false, "update_duplicate" => true, "columns_to_update"=>[]];
+                        var_export($query);
+                        $query = insert("Shows", $result, $opts); 
+                       // var_export($query); */
+                        
+                        ?>
                 </pre>
+                <?php endforeach; ?> <!-- inner foreach end -->
             <?php endforeach; ?> 
-           
         <?php endif; ?>
     </div>
 </div>
 <?php
 
 $db = getDB();
-$opts = ["debug" => false, "update_duplicate" => false, "columns_to_update"=>[]];
+$opts = ["debug" => false, "update_duplicate" => true, "columns_to_update"=>[]];
 $query = insert("Shows", $result, $opts);
 var_export($query);
+
+/*$extra_headers["Type"] = "get-show-details";
+$data = ["imdb_id" => $_GET["imdb_id"], ];
+$result = get($endpoint, "SHOW_API_KEY", $data, $extra_headers, $isRapidAPI, $rapidAPIHost);
+$query = insert("Shows", $result, $opts);
+var_export($query);*/
+
 require(__DIR__ . "/../../partials/flash.php");
