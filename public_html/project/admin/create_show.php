@@ -4,7 +4,8 @@ require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
     flash("You don't have permission to view this page", "warning");
-    die(header("Location: $BASE_PATH" . "/home.php"));
+    //die(header("Location: $BASE_PATH" . "/home.php"));
+    redirect("home.php");
 }
 ?>
 
@@ -40,7 +41,7 @@ if (isset($_POST["action"])) {
         //optional options for debugging and duplicate handling
         $opts =
             ["debug" => true, "update_duplicate" => false, "columns_to_update" => []];
-        $result = insert("Shows", $result, $opts);
+        $result = insert("Shows", $quote, $opts);
         if (!$result) {
             flash("Unhandled error", "warning");
         } else {
@@ -84,13 +85,13 @@ if (isset($_POST["action"])) {
     <div id="add" style="display: none;" class="tab-target">
         <form method="POST">
             <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Show Title", "label" => "Show Title", "rules"=>["required" => "required"]]); ?>
-            <?php render_input(["type" => "date", "name" => "title", "placeholder" => "Release Date", "label" => "Release Date","rules"=>["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "title", "placeholder" => "IMDB ID", "label" => "IMDB ID", "rules"=>["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Show Description", "label" => "Show Description", "rules"=>["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Show Rating", "label" => "Show Rating", "rules"=>["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Show Popularity", "label" => "Show Popularity", "rules"=>["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Poster","label" => "Poster", "rules"=>["required" => "required"]]); ?>
-
+            <?php render_input(["type" => "date", "name" => "release_date", "placeholder" => "Release Date", "label" => "Release Date","rules"=>["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "imbd_id", "placeholder" => "IMDB ID", "label" => "IMDB ID", "rules"=>["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "description", "placeholder" => "Show Description", "label" => "Show Description", "rules"=>["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "irating", "placeholder" => "Show Rating", "label" => "Show Rating", "rules"=>["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "popularity", "placeholder" => "Show Popularity", "label" => "Show Popularity", "rules"=>["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "poster", "placeholder" => "Poster","label" => "Poster Filename", "rules"=>["required" => "required"]]); ?>
+        
             <?php render_input(["type" => "hidden", "name" => "action", "value"=>"create"]); ?>
             <?php render_button(["text" => "Add", "type" => "submit"]); ?>
         </form>

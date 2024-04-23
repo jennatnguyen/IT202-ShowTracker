@@ -1,6 +1,6 @@
 <?php 
 function fetch_show_by_title($title) {
-    $data = ["title" => $_GET["title"]];
+    $data = ["title" => $title];
     $endpoint = "https://movies-tv-shows-database.p.rapidapi.com/";
     $isRapidAPI = true;
     $rapidAPIHost = "movies-tv-shows-database.p.rapidapi.com";
