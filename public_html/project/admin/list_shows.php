@@ -102,7 +102,7 @@ if (count($_GET) > 0) {
 
 
 /************************************************************** */
-$query = "SELECT id, title, release_date, imdb_id, description, irating, popularity FROM `Shows` ORDER BY created DESC LIMIT 25";
+
 $db = getDB();
 $stmt = $db->prepare($query);
 $results = [];
