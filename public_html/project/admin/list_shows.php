@@ -7,47 +7,101 @@ if (!has_role("Admin")) {
     redirect("home.php");
 }
 
-//if the field is NULL, fetch it
-/*$result = [];
-if (isset($_GET["imbd_id"])) {
+    //build search form
+    $form = [
+        ["type" => "text", "name" => "title", "placeholder" => "Show Title", "label" => "Show Title", "include_margin" => false],
+        ["type" => "date", "name" => "release_date", "placeholder" => "Release Date", "label" => "Release Date","include_margin" => false],
+        ["type" => "text", "name" => "irating", "placeholder" => "Show Rating", "label" => "Show Rating", "include_margin" => false],
+        ["type" => "text", "name" => "popularity", "placeholder" => "Show Popularity", "label" => "Show Popularity", "include_margin" => false],
 
-    $data = ["imbd_id" => $_GET["imbd_id"]];
-    $endpoint = "https://movies-tv-shows-database.p.rapidapi.com/";
-    $isRapidAPI = true;
-    $rapidAPIHost = "movies-tv-shows-database.p.rapidapi.com";
-    $extra_headers["Type"] = "get-show-details";
-    $result = get($endpoint, "SHOW_API_KEY", $data, $extra_headers, $isRapidAPI, $rapidAPIHost);
+        ["type" => "select", "name" => "sort", "label" => "Sort", "options" => ["title" => "Title", "release_date" => "Date", "irating" => "Rating", "popularity" => "Popularity"], "include_margin" => false],
+        ["type" => "select", "name" => "order", "label" => "Order", "options" => ["asc" => "+", "desc" => "-"], "include_margin" => false],
+    
+        ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false],
+    ];
 
-    error_log("Response: " . var_export($result, true));
-    if (se($result, "status", 400, false) == 200 && isset($result["response"])) {
-        $result = json_decode($result["response"], true);
-        
-        if (isset($result["tv_results"])){
-            $result = $result["tv_results"];
-        }
-        else {
-            flash("Show does not exist");
-        }
-    } else {
-        $result = [];
-    }
+error_log("Form data: " . var_export($form, true));
+
+$query = "SELECT id, title, release_date, imdb_id, irating, popularity FROM `Shows` WHERE 1=1";
+$params = [];
+$session_key = $_SERVER["SCRIPT_NAME"];
+$is_clear = isset($_GET["clear"]);
+if ($is_clear) {
+    session_delete($session_key);
+    unset($_GET["clear"]);
+    redirect($session_key);
+} else {
+    $session_data = session_load($session_key);
 }
 
-    if (isset($result)) : 
-     foreach($result as $index=>$id) : 
+if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
+    if ($session_data) {
+        $_GET = $session_data;
+    }
+}
+if (count($_GET) > 0) {
+    session_save($session_key, $_GET);
+    $keys = array_keys($_GET);
 
-         foreach($id as $key=>$value): 
-            if (!in_array($k, ["description", "irating", "popularity"])) {
-                $opts = ["debug" => false, "update_duplicate" => true, "columns_to_update"=>[]];
-                var_export($query);
-                $query = insert("Shows", $result, $opts); 
-                var_export($query); 
-            }
-                
-         endforeach;  
-     endforeach; 
-    endif; */
+    foreach ($form as $k => $v) {
+        if (in_array($v["name"], $keys)) {
+            $form[$k]["value"] = $_GET[$v["name"]];
+        }
+    }
 
+    //title
+    $title = se($_GET, "title", "", false);
+    if (!empty($title)) {
+        $query .= " AND title like :title";
+        $params[":title"] = "%$title%";
+    }
+
+    $release_date = se($_GET, "release_date", "", false);
+    if (!empty($release_date) && $release_date != "") {
+        $query .= " AND release_date >= :release_date";
+        $params[":release_date"] = $release_date;
+    }
+
+    $irating = se($_GET, "irating", "", false);
+    if (!empty($irating) && $irating != "") {
+        $query .= " AND irating >= :irating";
+        $params[":irating"] = $irating;
+    }
+
+    $popularity = se($_GET, "popularity", "", false);
+    if (!empty($popularity) && $popularity != "") {
+        $query .= " AND popularity >= :popularity";
+        $params[":popularity"] = $popularity;
+    }
+
+     //sort and order
+    $sort = se($_GET, "sort", "date", false);
+    if (!in_array($sort, ["title", "release_date", "irating", "popularity"])) {
+        $sort = "date";
+    }
+    $order = se($_GET, "order", "desc", false);
+    if (!in_array($order, ["asc", "desc"])) {
+        $order = "desc";
+    }
+
+    //IMPORTANT make sure you fully validate/trust $sort and $order (sql injection possibility)
+    $query .= " ORDER BY $sort $order";
+    //limit
+    try {
+        $limit = (int)se($_GET, "limit", "10", false);
+    } catch (Exception $e) {
+        $limit = 10;
+    }
+    if ($limit < 1 || $limit > 100) {
+        $limit = 10;
+    }
+    //IMPORTANT make sure you fully validate/trust $limit (sql injection possibility)
+    $query .= " LIMIT $limit";
+}
+
+
+
+/************************************************************** */
 $query = "SELECT id, title, release_date, imdb_id, description, irating, popularity FROM `Shows` ORDER BY created DESC LIMIT 25";
 $db = getDB();
 $stmt = $db->prepare($query);

@@ -73,7 +73,7 @@ if ($show) {
     $form = [
         ["type" => "text", "name" => "title", "placeholder" => "Show Title", "label" => "Show Title", "rules"=>["required" => "required"]],
         ["type" => "date", "name" => "release_date", "placeholder" => "Release Date", "label" => "Release Date","rules"=>["required" => "required"]],
-        ["type" => "text", "name" => "imbd_id", "placeholder" => "IMDB ID", "label" => "IMDB ID", "rules"=>["required" => "required"]],
+        
         ["type" => "text", "name" => "description", "placeholder" => "Show Description", "label" => "Show Description", "rules"=>["required" => "required"]],
         ["type" => "text", "name" => "irating", "placeholder" => "Show Rating", "label" => "Show Rating", "rules"=>["required" => "required"]],
         ["type" => "text", "name" => "popularity", "placeholder" => "Show Popularity", "label" => "Show Popularity", "rules"=>["required" => "required"]],

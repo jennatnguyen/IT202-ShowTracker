@@ -32,4 +32,6 @@ require(__DIR__ . "/db_helpers.php");
 require_once(__DIR__. "/redirect.php");
 
 require_once(__DIR__. "/show_api.php");
+
+require(__DIR__ . "/session_store.php");
 ?>
