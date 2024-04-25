@@ -119,6 +119,7 @@ try {
 
 $table = [
     "data" => $results, "title" => "Latest Shows", "ignored_columns" => ["id"],
+    "view_url" => get_url("admin/view_show.php"),
     "edit_url" => get_url("admin/edit_show.php"),
     "delete_url" => get_url("admin/delete_show.php")
 ];
