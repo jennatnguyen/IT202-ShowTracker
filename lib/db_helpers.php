@@ -239,3 +239,29 @@ if (php_sapi_name() == "cli") {
     // Call the function to execute
     test_insert();
 }
+
+function update($table, $data, $id)
+{
+    $sanitized_table_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $table);
+    $query = "UPDATE $sanitized_table_name SET";
+    $params = [];
+    foreach ($data as $key => $value) {
+         if(count($params) > 0){
+             $query .= ",";
+        }
+        $query .= " $key = :$key";
+        $params[":$key"] = $value;
+    }
+    $query .= " WHERE id = :id";
+    $params[":id"] = $id;
+    try {
+        $db = getDB();
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        return ["rowCount" => $stmt->rowCount(), "lastInsertId" => $db->lastInsertId()];
+    } catch (PDOException $e) {
+        throw $e;
+    } catch (Exception $e) {
+        throw $e;
+    }
+}

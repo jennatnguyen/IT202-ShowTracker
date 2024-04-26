@@ -11,10 +11,10 @@ if (!has_role("Admin")) {
     $form = [
         ["type" => "text", "name" => "title", "placeholder" => "Show Title", "label" => "Show Title", "include_margin" => false],
         ["type" => "date", "name" => "release_date", "placeholder" => "Release Date", "label" => "Release Date","include_margin" => false],
-        ["type" => "text", "name" => "irating", "placeholder" => "Show Rating", "label" => "Show Rating", "include_margin" => false],
-        ["type" => "text", "name" => "popularity", "placeholder" => "Show Popularity", "label" => "Show Popularity", "include_margin" => false],
+        ["type" => "text", "name" => "imdb_rating", "placeholder" => "Show Rating", "label" => "Show Rating", "include_margin" => false],
+        ["type" => "text", "name" => "rated", "placeholder" => "Show Audience", "label" => "Show Audience", "include_margin" => false],
 
-        ["type" => "select", "name" => "sort", "label" => "Sort", "options" => ["title" => "Title", "release_date" => "Date", "irating" => "Rating", "popularity" => "Popularity"], "include_margin" => false],
+        ["type" => "select", "name" => "sort", "label" => "Sort", "options" => ["title" => "Title", "release_date" => "Date", "imdb_rating" => "Rating", "rated" => "rated"], "include_margin" => false],
         ["type" => "select", "name" => "order", "label" => "Order", "options" => ["asc" => "+", "desc" => "-"], "include_margin" => false],
     
         ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false],
@@ -22,7 +22,7 @@ if (!has_role("Admin")) {
 
 error_log("Form data: " . var_export($form, true));
 
-$query = "SELECT id, title, release_date, imdb_id, irating, popularity FROM `Shows` WHERE 1=1";
+$query = "SELECT id, title, release_date, imdb_id, imdb_rating, rated FROM `Shows` WHERE 1=1";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
@@ -62,21 +62,21 @@ if (count($_GET) > 0) {
         $params[":release_date"] = $release_date;
     }
 
-    $irating = se($_GET, "irating", "", false);
-    if (!empty($irating) && $irating != "") {
-        $query .= " AND irating >= :irating";
-        $params[":irating"] = $irating;
+    $imdb_rating = se($_GET, "imdb_rating", "", false);
+    if (!empty($imdb_rating) && $imdb_rating != "") {
+        $query .= " AND imdb_rating like :imdb_rating";
+        $params[":imdb_rating"] = "%$imdb_rating%";
     }
 
-    $popularity = se($_GET, "popularity", "", false);
-    if (!empty($popularity) && $popularity != "") {
-        $query .= " AND popularity >= :popularity";
-        $params[":popularity"] = $popularity;
+    $rated = se($_GET, "rated", "", false);
+    if (!empty($rated) && $rated != "") {
+        $query .= " AND rated like :rated";
+        $params[":rated"] = "%$rated%";
     }
 
      //sort and order
     $sort = se($_GET, "sort", "date", false);
-    if (!in_array($sort, ["title", "release_date", "irating", "popularity"])) {
+    if (!in_array($sort, ["title", "release_date", "imdb_rating", "rated"])) {
         $sort = "date";
     }
     $order = se($_GET, "order", "desc", false);

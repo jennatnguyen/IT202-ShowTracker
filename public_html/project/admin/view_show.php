@@ -33,44 +33,32 @@ if ($id > -1) {
 }
 
 if (isset($show["imdb_id"])) {
-    $id = se($show, "imdb_id", "", false);
+    $imbdid = se($show, "imdb_id", "", false);
     
     $quote = [];
-        if ($id) {
-    
-            $result = fetch_show_by_id($id);
-            // error_log("Data from API" . var_export($result, true));
-            if ($result) {
-                foreach ($show["imdb_id"] as $index=>$id) {
-                    foreach($id as $key=>$value) {
-                        if(!in_array($key, ["popularity,","irating", "description"])) {
-                            unset($show["imdb_id"][$k]);
-                        }//end of if
-                    }//end of second foreach
-                }//end of foreach
+        if ($imbdid) {
 
+        //    error_log(var_export($imbdid, false));
+
+            $result = fetch_show_by_id($imbdid);
+             error_log("Data from API" . var_export($result, true));
+            if ($result) {
                 $quote = $result;
                 $quote["is_api"] = 1;
                 $opts = ["debug" => false, "update_duplicate" => true, "columns_to_update"=>[]];
-                var_export($query);
-                $query = insert("Shows", $result, $opts); 
+              //  var_export($query);
+                $query = update("Shows", $result, $id); 
 
             }
         }
 }
 
-/*foreach ($show as $index => $id) {
+foreach ($show as $key => $value) {
+    if (is_null($value)) {
+        $show[$key] = "N/A";
+    }
+}
 
-        foreach($id as $key=>$value) {
-            if (is_null($id)) {
-                //$data = ["id" => $show["imdb_id"]];
-                $opts = ["debug" => false, "update_duplicate" => true, "columns_to_update"=>[]];
-                var_export($query);
-                $query = insert("Shows", $result, $opts); 
-            }
-        }
-
-}*/
 
 ?>
 <div class="container-fluid">
@@ -81,8 +69,8 @@ if (isset($show["imdb_id"])) {
     echo '<div style="text-align: center;">';
     echo "<h2>{$show['title']}</h2>";
     echo "<p><strong>Released:</strong> {$show['release_date']} </p>";
-    echo "<p><strong>Rating:</strong> {$show['irating']}</p>";
-    echo "<p><strong>Popularity:</strong> {$show['popularity']}</p>";
+    echo "<p><strong>Audience:</strong> {$show['rated']}</p>";
+    echo "<p><strong>Rating:</strong> {$show['imdb_rating']}</p>";
     echo "<p><strong>Description:</strong> {$show['description']}</p>";
 
     echo '</div>';

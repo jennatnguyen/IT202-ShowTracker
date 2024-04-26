@@ -26,7 +26,7 @@ if (isset($_POST["action"])) {
             }
         } else if ($action === "create") {
             foreach ($_POST as $k => $v) {
-                if (!in_array($k, ["title", "release_date", "description","irating","popularity","poster"])) {
+                if (!in_array($k, ["title", "release_date", "description","rated","imdb_rating"])) {
                     unset($_POST[$k]);
                 }
                 $quote = $_POST;
@@ -88,10 +88,9 @@ if (isset($_POST["action"])) {
             <?php render_input(["type" => "date", "name" => "release_date", "placeholder" => "Release Date", "label" => "Release Date","rules"=>["required" => "required"]]); ?>
            
             <?php render_input(["type" => "text", "name" => "description", "placeholder" => "Show Description", "label" => "Show Description", "rules"=>["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "irating", "placeholder" => "Show Rating", "label" => "Show Rating", "rules"=>["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "popularity", "placeholder" => "Show Popularity", "label" => "Show Popularity", "rules"=>["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "poster", "placeholder" => "Poster","label" => "Poster Filename", "rules"=>["required" => "required"]]); ?>
-        
+            <?php render_input(["type" => "text", "name" => "imdb_id", "placeholder" => "Show Rating (/10)", "label" => "Show Rating", "rules"=>["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "rated", "placeholder" => "Show Audience (E.G. TV-PG)", "label" => "Show Audience", "rules"=>["required" => "required"]]); ?>
+          
             <?php render_input(["type" => "hidden", "name" => "action", "value"=>"create"]); ?>
             <?php render_button(["text" => "Add", "type" => "submit"]); ?>
         </form>
