@@ -19,7 +19,7 @@ if (isset($_POST["action"])) {
     if ($title) {
         if ($action === "fetch") {
             $result = fetch_show_by_title($title);
-            error_log("Data from API" . var_export($result, true));
+            error_log("Data from API" . var_export($result, false));
             if ($result) {
                 $quote = $result;
                 $quote["is_api"] = 1;
@@ -48,7 +48,7 @@ if (isset($_POST["action"])) {
             flash("Created record with id " . var_export($result, true), "success");
         }
     } catch (InvalidArgumentException $e1) {
-        error_log("Invalid arg" . var_export($e1, true));
+        error_log("Invalid arg" . var_export($e1, false));
         flash("Invalid data passed", "danger");
     } catch (PDOException $e2) {
         if ($e2->errorInfo[1] == 1062) {
@@ -58,7 +58,7 @@ if (isset($_POST["action"])) {
             flash("Database error", "danger");
         }
     } catch (Exception $e3) {
-        error_log("Invalid data records" . var_export($e3, true));
+        error_log("Invalid data records" . var_export($e3, false));
         flash("Invalid data records", "danger");
     }
 }
