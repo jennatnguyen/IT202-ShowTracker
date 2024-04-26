@@ -58,6 +58,20 @@ session_start();
                         </ul>
                     </li>
                 <?php endif; ?>
+                <?php if (has_role("Admin")) : ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Show Management
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/create_show.php'); ?>">Add Show</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/list_shows.php'); ?>">List Shows</a></li>
+                        </ul>
+                    </li>
+                <?php endif; ?>
+                <?php if (!has_role("Admin") && is_logged_in()) : ?>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo get_url('fetch_show.php'); ?>">Fetch Show</a></li>
+                <?php endif; ?>
                 <?php if (is_logged_in()) : ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('logout.php'); ?>">Logout</a></li>
                 <?php endif; ?>
