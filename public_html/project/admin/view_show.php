@@ -71,7 +71,9 @@ foreach ($show as $key => $value) {
     echo "<p><strong>Released:</strong> {$show['release_date']} </p>";
     echo "<p><strong>Audience:</strong> {$show['rated']}</p>";
     echo "<p><strong>Rating:</strong> {$show['imdb_rating']}</p>";
+    echo "<p><strong>Genre(s):</strong> {$show['genres']}</p>";
     echo "<p><strong>Description:</strong> {$show['description']}</p>";
+    
 
     echo '</div>';
 ?>
@@ -79,7 +81,10 @@ foreach ($show as $key => $value) {
     <div>
         <a href="<?php echo get_url("admin/list_shows.php"); ?>" class="btn btn-secondary">Back</a>
     </div>
-
+    <div style="text-align: right;">
+        <a href="<?php echo get_url("admin/edit_show.php"); ?>" class="btn btn-secondary">Edit</a>
+        <a href="<?php echo get_url("admin/delete_show.php"); ?>" class="btn btn-secondary">Delete</a>
+    </div>
 </div>
 
 
