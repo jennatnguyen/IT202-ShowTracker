@@ -13,7 +13,7 @@ $id = se($_GET, "id", -1, false);
 //TODO handle show fetch
 if (isset($_POST["title"])) {
     foreach ($_POST as $k => $v) {
-        if (!in_array($k, ["title", "release_date", "imdb_id", "description", "irating", "popularity"])) {
+        if (!in_array($k, ["title", "release_date", "imdb_id", "description", "rated", "imdb_rating", "genres"])) {
             unset($_POST[$k]);
         }
         $quote = $_POST;
@@ -53,7 +53,7 @@ $show = [];
 if ($id > -1) {
     //fetch
     $db = getDB();
-    $query = "SELECT title, release_date, imdb_id, description, irating, popularity FROM `Shows` WHERE id = :id";
+    $query = "SELECT title, release_date, imdb_id, description, rated, imdb_rating, genres FROM `Shows` WHERE id = :id";
     try {
         $stmt = $db->prepare($query);
         $stmt->execute([":id" => $id]);
@@ -75,9 +75,9 @@ if ($show) {
         ["type" => "date", "name" => "release_date", "placeholder" => "Release Date", "label" => "Release Date","rules"=>["required" => "required"]],
         
         ["type" => "text", "name" => "description", "placeholder" => "Show Description", "label" => "Show Description", "rules"=>["required" => "required"]],
-        ["type" => "text", "name" => "irating", "placeholder" => "Show Rating", "label" => "Show Rating", "rules"=>["required" => "required"]],
-        ["type" => "text", "name" => "popularity", "placeholder" => "Show Popularity", "label" => "Show Popularity", "rules"=>["required" => "required"]],
-        ["type" => "text", "name" => "poster", "placeholder" => "Poster","label" => "Poster Filename", "rules"=>["required" => "required"]],
+        ["type" => "text", "name" => "imdb_rating", "placeholder" => "Show Rating", "label" => "Show Rating", "rules"=>["required" => "required"]],
+        ["type" => "text", "name" => "rated", "placeholder" => "Show Audience", "label" => "Show Audience", "rules"=>["required" => "required"]],
+        ["type" => "text", "name" => "genres", "placeholder" => "Genre(s)","label" => "Genre(s)", "rules"=>["required" => "required"]],
 
     ];
     $keys = array_keys($show);
