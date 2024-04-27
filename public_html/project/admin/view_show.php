@@ -84,9 +84,9 @@ foreach ($show as $key => $value) {
         <a href="<?php echo get_url("admin/list_shows.php"); ?>" class="btn btn-secondary">Back</a>
     </div>
     <div style="text-align: right;">
-        <a href="<?php echo get_url("admin/edit_show.php"); ?>" class="btn btn-secondary">Edit</a>
-        <a href="<?php echo get_url("admin/delete_show.php"); ?>" class="btn btn-secondary">Delete</a>
-    </div>
+    <a href="<?php echo get_url("admin/edit_show.php?id=".$id); ?>" class="btn btn-secondary">Edit</a>
+    <a href="<?php echo get_url("admin/delete_show.php?id=".$id); ?>" class="btn btn-secondary">Delete</a>
+</div>
 </div>
 
 
