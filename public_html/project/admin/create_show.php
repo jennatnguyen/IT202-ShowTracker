@@ -22,7 +22,7 @@ if (isset($_POST["action"])) {
             error_log("Data from API" . var_export($result, false));
             if ($result) {
                 $quote = $result;
-                $quote["is_api"] = 1;
+            //    $quote["is_api"] = 1;
             }
         } else if ($action === "create") {
             foreach ($_POST as $k => $v) {
@@ -62,8 +62,97 @@ if (isset($_POST["action"])) {
         flash("Invalid data records", "danger");
     }
 }
+
 //TODO handle manual create stock
 ?>
+
+
+<script>
+function validation(form) {
+    let title = form.title.value;
+    let genres = form.genres.value;
+    let rated = form.rated.value;
+    let imdb_rating = form.imdb_rating.value;
+    let description = form.description.value;
+    let valid = true;
+
+    if(title.length == 0) {
+        flash("Must include title", "warning");
+        valid = false;
+    }
+
+    if(genres.length == 0) {
+        flash("Must include genre", "warning");
+        valid = false;
+    }
+
+    if((imdb_rating.length == 0)) {
+        flash("Must include rating", "warning");
+        valid = false;
+    }
+
+    if(isNaN(imdb_rating)) {
+        flash("Rating must be a number", "warning");
+        valid = false;
+    }
+
+    if((description.length == 0)) {
+        flash("Must include description", "warning");
+        valid = false;
+    }
+    
+    return valid;
+}
+</script>
+
+<?php
+if (isset($_POST["create"])){
+    $title = se($_POST, "title", "", false);
+    $genres = se($_POST, "genres", "", false);
+    $rated = se($_POST, "rated", "", false);
+    $imdb_rating = se($_POST, "imdb_rating", "", false);
+    $description = se($_POST, "description", "", false);
+    //TODO 3
+    $hasError = false;
+
+    if (empty($title)) {
+        flash("Title must not be empty", "danger");
+        $hasError = true;
+    }
+
+    if (empty($genres)) {
+        flash("genre must not be empty", "danger");
+        $hasError = true;
+    }
+    if (empty($rated)) {
+        flash("audience rating must not be empty", "danger");
+        $hasError = true;
+    }
+
+    if (empty($imdb_rating)) {
+        flash("rating must not be empty", "danger");
+        $hasError = true;
+    }
+    if (empty($description)) {
+        flash("description password must not be empty", "danger");
+        $hasError = true;
+    }
+    
+    if (!$hasError) {
+        //TODO 4
+        
+        $db = getDB();
+        $stmt = $db->prepare("INSERT INTO Shows (title, genres, rated, imdb_rating, description) VALUES(:title, :genres, :rated, :imdb_rating, :description)");
+        try {
+            $stmt->execute([":title" => $title, ":genres" => $genres, ":rated" => $rated, ":imdb_rating" => $imdb_rating, ":description" => $description,]);
+            flash("Successfully registered!", "success");
+        } catch (PDOException $e) {
+            users_check_duplicate($e->errorInfo);
+        }
+    }
+}
+?>
+
 <div class="container-fluid">
     <h3>Add or Fetch Show</h3>
     <ul class="nav nav-tabs">
