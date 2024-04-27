@@ -1,5 +1,6 @@
 <?php
 //note we need to go up 1 more directory
+//JN425 4/26/24
 require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
@@ -19,7 +20,7 @@ if (isset($_POST["action"])) {
     if ($title) {
         if ($action === "fetch") {
             $result = fetch_show_by_title($title);
-            error_log("Data from API" . var_export($result, false));
+            error_log("Data from API" . var_export($result, true));
             if ($result) {
                 $quote = $result;
             //    $quote["is_api"] = 1;
@@ -39,6 +40,7 @@ if (isset($_POST["action"])) {
     //insert data
     try {
         //optional options for debugging and duplicate handling
+        //JN426 4/26/24
         $opts =
             ["debug" => true, "update_duplicate" => false, "columns_to_update" => []];
         $result = insert("Shows", $quote, $opts);
@@ -67,7 +69,7 @@ if (isset($_POST["action"])) {
 ?>
 
 
-<script>
+<script>//JN426 4/26/24
 function validation(form) {
     let title = form.title.value;
     let genres = form.genres.value;
@@ -112,7 +114,7 @@ if (isset($_POST["create"])){
     $rated = se($_POST, "rated", "", false);
     $imdb_rating = se($_POST, "imdb_rating", "", false);
     $description = se($_POST, "description", "", false);
-    //TODO 3
+    //JN426 4/26/24
     $hasError = false;
 
     if (empty($title)) {
@@ -170,7 +172,7 @@ if (isset($_POST["create"])){
             <?php render_button(["text" => "Search", "type" => "submit"]); ?>
         </form>
     </div>
-
+<!--JN426 4/26/24-->
     <div id="add" style="display: none;" class="tab-target">
         <form method="POST">
             <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Show Title", "label" => "Show Title", "rules"=>["required" => "required"]]); ?>
