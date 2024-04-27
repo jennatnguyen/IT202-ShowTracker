@@ -22,7 +22,7 @@ if (isset($_POST["action"])) {
             error_log("Data from API" . var_export($result, true));
             if ($result) {
                 $quote = $result;
-                $quote["is_api"] = 1;
+                
             }
         }  else {
         flash("You must provide a title", "warning");
