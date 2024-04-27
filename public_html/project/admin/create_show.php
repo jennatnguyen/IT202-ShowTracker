@@ -144,8 +144,8 @@ if (isset($_POST["create"])){
         $db = getDB();
         $stmt = $db->prepare("INSERT INTO Shows (title, genres, rated, imdb_rating, description) VALUES(:title, :genres, :rated, :imdb_rating, :description)");
         try {
-            $stmt->execute([":title" => $title, ":genres" => $genres, ":rated" => $rated, ":imdb_rating" => $imdb_rating, ":description" => $description,]);
-            flash("Successfully registered!", "success");
+            $stmt->execute([":title" => $title, ":genres" => $genres, ":rated" => $rated, ":imdb_rating" => $imdb_rating, ":description" => $description]);
+            flash("Successfully created!", "success");
         } catch (PDOException $e) {
             users_check_duplicate($e->errorInfo);
         }
