@@ -1,7 +1,7 @@
 <?php
 //note we need to go up 1 more directory
 require(__DIR__ . "/../../../partials/nav.php");
-
+//JN426 4/26/24
 if (!has_role("Admin")) {
     flash("You don't have permission to view this page", "warning");
     redirect("home.php");
@@ -33,7 +33,7 @@ if ($is_clear) {
 } else {
     $session_data = session_load($session_key);
 }
-
+//JN426 4/26/24
 if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
     if ($session_data) {
         $_GET = $session_data;
@@ -102,7 +102,7 @@ if (count($_GET) > 0) {
 
 
 /************************************************************** */
-
+//JN426 4/26/24
 $db = getDB();
 $stmt = $db->prepare($query);
 $results = [];

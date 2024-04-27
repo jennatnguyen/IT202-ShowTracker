@@ -130,7 +130,7 @@ function validation(form) {
 </script>
 
 <?php
-if (isset($_POST["save"])){
+if (isset($_POST["title"]) && isset($_POST["genres"]) && isset($_POST["rated"]) && isset($_POST["imdb_rating"]) && isset($_POST["description"])){
     $title = se($_POST, "title", "", false);
     $genres = se($_POST, "genres", "", false);
     $rated = se($_POST, "rated", "", false);
@@ -158,7 +158,7 @@ if (isset($_POST["save"])){
         $hasError = true;
     }
     if (empty($description)) {
-        flash("description password must not be empty", "danger");
+        flash("description must not be empty", "danger");
         $hasError = true;
     }
     
