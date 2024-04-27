@@ -1,5 +1,6 @@
 <?php
 //note we need to go up 1 more directory
+//jn426 4/26/24
 require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
@@ -13,7 +14,7 @@ $id = se($_GET, "id", -1, false);
 
 $show = [];
 if ($id > -1) {
-    //fetch
+    //fetch jn426 4/26/24
     $db = getDB();
     $query = "SELECT * FROM `Shows` WHERE id = :id";
     try {
@@ -38,7 +39,7 @@ if (isset($show["imdb_id"])) {
     $quote = [];
         if ($imbdid) {
 
-        //    error_log(var_export($imbdid, false));
+        //    jn426 4/26/24
 
             $result = fetch_show_by_id($imbdid);
              error_log("Data from API" . var_export($result, true));
@@ -65,6 +66,7 @@ foreach ($show as $key => $value) {
     <h3><?php se($show, "", ""); ?></h3>
 
     <?php
+    //fetch jn426 4/26/24
 
     echo '<div style="text-align: center;">';
     echo "<h2>{$show['title']}</h2>";
