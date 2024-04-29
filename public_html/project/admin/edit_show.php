@@ -10,7 +10,7 @@ if (!has_role("Admin")) {
 
 <?php
 $id = se($_GET, "id", -1, false);
-//TODO handle show fetch
+//TODO handle show fetch, JN426 4/26/24
 if (isset($_POST["title"])) {
     foreach ($_POST as $k => $v) {
         if (!in_array($k, ["title", "release_date", "imdb_id", "description", "rated", "imdb_rating", "genres"])) {
@@ -69,7 +69,7 @@ if ($id > -1) {
     flash("Invalid id passed", "danger");
     redirect("admin/list_shows.php");
 }
-if ($show) {
+if ($show) {//JN426 4/26/24
     $form = [
         ["type" => "text", "name" => "title", "placeholder" => "Show Title", "label" => "Show Title", "rules"=>["required" => "required"]],
         ["type" => "date", "name" => "release_date", "placeholder" => "Release Date", "label" => "Release Date","rules"=>["required" => "required"]],
@@ -91,7 +91,7 @@ if ($show) {
 //TODO handle manual create show
 ?>
 
-<script>
+<script>//jn426 4/26/24
 function validation(form) {
     let title = form.title.value;
     let genres = form.genres.value;
@@ -138,7 +138,7 @@ if (isset($_POST["title"]) && isset($_POST["genres"]) && isset($_POST["rated"]) 
     $description = se($_POST, "description", "", false);
     //TODO 3
     $hasError = false;
-
+//jn426 4/26/24
     if (empty($title)) {
         flash("Title must not be empty", "danger");
         $hasError = true;
