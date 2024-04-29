@@ -3,6 +3,22 @@
 require(__DIR__ . "/../../partials/nav.php");
 is_logged_in(true);
 
+$db = getDB();
+//remove all associations
+if (isset($_GET["remove"])) {
+    $query = "DELETE FROM `UserShows` WHERE user_id = :user_id";
+    try {
+        $stmt = $db->prepare($query);
+        $stmt->execute([":user_id" => get_user_id()]);
+        flash("Successfully removed all shows", "success");
+    } catch (PDOException $e) {
+        error_log("Error removing broker associations: " . var_export($e, true));
+        flash("Error removing broker associations", "danger");
+    }
+
+    redirect("my_shows.php");
+}
+
 //JN426 4/26/24
 
     //build search form
@@ -155,7 +171,7 @@ $table = [
     
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
-   
+        <a href="?remove" onclick="confirm('Are you sure')?'':event.preventDefault()" class="btn btn-danger">Remove All Shows</a>
         
     </form>
     <?php render_result_counts(count($results), $total_records); ?>
