@@ -47,6 +47,7 @@ session_start();
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('register.php'); ?>">Register</a></li>
                 <?php endif; ?>
                 <?php if (is_logged_in()) : ?>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo get_url('my_shows.php'); ?>">My Shows</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('shows.php'); ?>">TV Shows</a></li>
                 <?php endif; ?>
                 <?php if (has_role("Admin")) : ?>
