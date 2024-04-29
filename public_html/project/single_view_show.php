@@ -26,7 +26,7 @@ if ($id > -1) {
     }
 } else {
     flash("Invalid id passed", "danger");
-    redirect("admin/list_shows.php");
+    redirect("shows.php");
 }
 
 if (isset($show["imdb_id"])) {
@@ -70,12 +70,9 @@ foreach ($show as $key => $value) {
     
     <div>
         <div>
-            <a href="<?php echo get_url("shows.php"); ?>" class="btn btn-secondary">Back</a>
+            <a href="<?php echo get_url("my_shows.php"); ?>" class="btn btn-secondary">Back</a>
         </div>
-        <div style="text-align: right;">
-        <a href="<?php echo get_url("admin/edit_show.php?id=".$id); ?>" class="btn btn-secondary">Edit</a>
-        <a href="<?php echo get_url("admin/delete_show.php?id=".$id); ?>" class="btn btn-secondary">Delete</a>
-        <a href="<?php echo get_url("brokers.php"); ?>" class="btn btn-secondary">Back</a>
+
     </div>
 
     <?php render_single_show_card($show); ?>

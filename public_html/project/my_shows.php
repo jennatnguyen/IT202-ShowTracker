@@ -1,11 +1,9 @@
 <?php
-//note we need to go up 1 more directory
-require(__DIR__ . "/../../../partials/nav.php");
+
+require(__DIR__ . "/../../partials/nav.php");
+is_logged_in(true);
+
 //JN426 4/26/24
-if (!has_role("Admin")) {
-    flash("You don't have permission to view this page", "warning");
-    redirect("home.php");
-}
 
     //build search form
     $form = [
@@ -22,9 +20,14 @@ if (!has_role("Admin")) {
 
 error_log("Form data: " . var_export($form, true));
 
-$total_records = get_total_count("`Shows`");
-$query = "SELECT id, title, genres, imdb_id, imdb_rating, rated FROM `Shows` WHERE 1=1";
-$params = [];
+$total_records = get_total_count("`Shows` b
+JOIN `UserShows` ub ON b.id = ub.show_id
+WHERE user_id = :user_id", [":user_id" => get_user_id()]);
+
+$query = "SELECT b.id, title, genres, imdb_id, imdb_rating, rated FROM `Shows` b
+JOIN `UserShows` ub ON b.id = ub.show_id
+WHERE user_id=:user_id";
+$params = [":user_id" => get_user_id()];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
 if ($is_clear) {
@@ -76,10 +79,21 @@ if (count($_GET) > 0) {
     }
 
      //sort and order
-    $sort = se($_GET, "sort", "date", false);
+   /* $sort = se($_GET, "sort", "date", false);
     if (!in_array($sort, ["title", "genres", "imdb_rating", "rated"])) {
+        
         $sort = "date";
+    }*/
+
+    $sort = se($_GET, "sort", "created", false);
+    if (!in_array($sort, ["title", "genres", "imdb_rating", "rated"])) {
+        $sort = "created";
     }
+    //tell mysql I care about the data from table "b"
+    if ($sort === "created" || $sort === "modified") {
+        $sort = "b." . $sort;
+    }
+
     $order = se($_GET, "order", "desc", false);
     if (!in_array($order, ["asc", "desc"])) {
         $order = "desc";
@@ -119,15 +133,15 @@ try {
 }
 
 $table = [
-    "data" => $results, "title" => "Latest Shows", "ignored_columns" => ["id"],
-    "view_url" => get_url("admin/view_show.php"),
-    "edit_url" => get_url("admin/edit_show.php"),
-    "delete_url" => get_url("admin/delete_show.php")
+    "data" => $results, "title" => "Latest Shows", "ignored_columns" => ["id","imdb_id"],
+    "view_url" => get_url("single_view_show.php")
+  //  "edit_url" => get_url("admin/edit_show.php"),
+  //  "delete_url" => get_url("admin/delete_show.php")
 ];
 ?>
 
-<div class="container-fluid">
-    <h3>List Shows</h3>
+<div class="container-fluid"> 
+    <h3>My Shows</h3>
     <form method="GET">
         <div class="row mb-3" style="align-items: flex-end;">
 
@@ -138,13 +152,28 @@ $table = [
             <?php endforeach; ?>
 
         </div>
+    
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
+   
+        
     </form>
-    <?php render_table($table); ?>
+    <?php render_result_counts(count($results), $total_records); ?>
+    <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
+        <?php foreach ($results as $show) : ?>
+            <div class="col">
+                <?php render_show_card($show); ?>
+            </div>
+        <?php endforeach; ?>
+        <?php if (count($results) === 0) : ?>
+            <div class="col">
+                No results to show
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
 
 <?php
-//note we need to go up 1 more directory
-require_once(__DIR__ . "/../../../partials/flash.php");
+
+require_once(__DIR__ . "/../../partials/flash.php");
 ?>

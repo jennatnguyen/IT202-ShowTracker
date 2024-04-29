@@ -20,7 +20,11 @@ is_logged_in(true);
 
 error_log("Form data: " . var_export($form, true));
 
-$query = "SELECT id, title, genres, imdb_id, imdb_rating, rated FROM `Shows` WHERE 1=1";
+$total_records = get_total_count("`Shows` b LEFT JOIN `UserShows` ub on b.id = ub.show_id");
+
+$query = "SELECT b.id, title, genres, imdb_id, imdb_rating, rated, ub.user_id FROM `Shows` b
+LEFT JOIN `UserShows` ub ON b.id = ub.show_id
+WHERE 1=1";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
@@ -72,11 +76,16 @@ if (count($_GET) > 0) {
         $params[":rated"] = "%$rated%";
     }
 
-     //sort and order
-    $sort = se($_GET, "sort", "date", false);
+    //sort and order
+    $sort = se($_GET, "sort", "created", false);
     if (!in_array($sort, ["title", "genres", "imdb_rating", "rated"])) {
-        $sort = "date";
+        $sort = "created";
     }
+    //tell mysql I care about the data from table "b"
+    if ($sort === "created" || $sort === "modified") {
+        $sort = "b." . $sort;
+    }
+
     $order = se($_GET, "order", "desc", false);
     if (!in_array($order, ["asc", "desc"])) {
         $order = "desc";
@@ -123,7 +132,7 @@ $table = [
 ];
 ?>
 
-<div class="container-fluid">
+<div class="container-fluid"> 
     <h3>TV Shows</h3>
     <form method="GET">
         <div class="row mb-3" style="align-items: flex-end;">
@@ -141,10 +150,11 @@ $table = [
         <a href="<?php echo get_url("fetch_show.php"); ?>" class="btn btn-danger">Add Unavailable Show</a>
         
     </form>
+    <?php render_result_counts(count($results), $total_records); ?>
     <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
         <?php foreach ($results as $show) : ?>
             <div class="col">
-                <?php render_show_card($show); ?>
+                <?php render_list_show_card($show); ?>
             </div>
         <?php endforeach; ?>
 </div>
