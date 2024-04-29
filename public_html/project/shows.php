@@ -76,7 +76,7 @@ if (count($_GET) > 0) {
         $params[":rated"] = "%$rated%";
     }
 
-    //sort and order
+    //sort and order JN426 4/29/24
     $sort = se($_GET, "sort", "created", false);
     if (!in_array($sort, ["title", "genres", "imdb_rating", "rated"])) {
         $sort = "created";
@@ -123,13 +123,7 @@ try {
     error_log("Error fetching shows " . var_export($e, true));
     flash("Unhandled error occurred", "danger");
 }
-
-$table = [
-    "data" => $results, "title" => "Latest Shows", "ignored_columns" => ["id","imdb_id"],
-    "view_url" => get_url("single_view_show.php")
-  //  "edit_url" => get_url("admin/edit_show.php"),
-  //  "delete_url" => get_url("admin/delete_show.php")
-];
+//JN426 4/29/24
 ?>
 
 <div class="container-fluid"> 
