@@ -46,6 +46,9 @@ session_start();
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('login.php'); ?>">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('register.php'); ?>">Register</a></li>
                 <?php endif; ?>
+                <?php if (is_logged_in()) : ?>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo get_url('shows.php'); ?>">TV Shows</a></li>
+                <?php endif; ?>
                 <?php if (has_role("Admin")) : ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -58,6 +61,7 @@ session_start();
                         </ul>
                     </li>
                 <?php endif; ?>
+                
                 <?php if (has_role("Admin")) : ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -70,7 +74,7 @@ session_start();
                     </li>
                 <?php endif; ?>
                 <?php if (!has_role("Admin") && is_logged_in()) : ?>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo get_url('fetch_show.php'); ?>">Fetch Show</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo get_url('fetch_show.php'); ?>">Add Show</a></li>
                 <?php endif; ?>
                 <?php if (is_logged_in()) : ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('logout.php'); ?>">Logout</a></li>
