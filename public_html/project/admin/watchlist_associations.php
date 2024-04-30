@@ -40,7 +40,7 @@ JOIN `Shows` s ON us.show_id = s.id
 JOIN Users u ON us.user_id = u.id
 WHERE 1 = 1";
 $params = [];
-  //username
+  //username JN426 4/30/24
   $username = se($_GET, "username", "", false);
   if (!empty($username)) {
       $query .= " AND u.username like :username";
@@ -85,19 +85,19 @@ try {
     error_log("Error fetching shows: " . $e->getMessage());
     flash("An error occurred while fetching shows", "danger");
 }
-
-$totalItemsQuery = "SELECT COUNT(*) AS total_items FROM UserShows";
-$stmt = $db->prepare($totalItemsQuery);
+//JN426 4/30/24
+$totalItems = "SELECT COUNT(*) AS total_items FROM UserShows";
+$stmt = $db->prepare($totalItems);
 $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-$totalItemsCount = $row['total_items'];
+$total_results = $row['total_items'];
 
 ?>
 
 <div style="text-align: center;">
     <div class="container-fluid">
         <h2>Watchlist Associations</h2>
-        <h5>Total Shows on Watchlists: <?php echo $totalItemsCount; ?></h5>
+        <h5>Total Shows on Watchlists: <?php echo $total_results; ?></h5>
         <h5>Total Items On Page: <?php echo count($results); ?></h5>
 
         <div style="text-align: left;">

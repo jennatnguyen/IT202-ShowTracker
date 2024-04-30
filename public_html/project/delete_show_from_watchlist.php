@@ -12,7 +12,7 @@ if ($id < 1) {
 $db = getDB();
 $query = "DELETE FROM `UserShows` WHERE show_id = :id AND user_id = :user_id";
 try {
-    // Fetch user_id from session
+    // Fetch user_id from session jn426 4/30/24
     $user_id = get_user_id();
     
     $stmt = $db->prepare($query);
