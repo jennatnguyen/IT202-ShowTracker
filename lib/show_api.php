@@ -20,6 +20,23 @@ function fetch_show_by_title($title) {
     } else {
         $result = [];
     }
+
+    if (isset($result)) {
+        foreach($result as $index=>$show) {
+
+            foreach($show as $key=>$value){
+
+                    if($key === "release_date" && $value === "0000-00-00") {
+                        $result[$index][$key] = null;
+                        
+                    }
+                    
+                   // var_export($show); 
+                    
+            }//end of inner foreach
+        }//end of foreach
+    } //end of if
+    
     return $result;
 }
 

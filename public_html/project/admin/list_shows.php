@@ -22,6 +22,7 @@ if (!has_role("Admin")) {
 
 error_log("Form data: " . var_export($form, true));
 
+$total_records = get_total_count("`Shows`");
 $query = "SELECT id, title, genres, imdb_id, imdb_rating, rated FROM `Shows` WHERE 1=1";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];

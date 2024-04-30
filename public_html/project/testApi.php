@@ -50,14 +50,6 @@ if (isset($_GET["title"])) {
                             $result[$index][$key] = null;
                         }
                         
-                     /*   //doing this makes the release date thing not work 
-                        $extra_headers["Type"] = "get-show-details";
-                        $data = ["id" => $show["imdb_id"], ];
-                        $opts = ["debug" => false, "update_duplicate" => true, "columns_to_update"=>[]];
-                        var_export($query);
-                        $query = insert("Shows", $result, $opts); 
-                       // var_export($query); */
-                        
                         ?>
                 </pre>
                 <?php endforeach; ?> <!-- inner foreach end -->
