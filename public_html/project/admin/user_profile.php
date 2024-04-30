@@ -1,29 +1,49 @@
 <?php
 
-require(__DIR__ . "/../../../partials/nav.php");
-is_logged_in(true);
+require_once(__DIR__ . "/../../../partials/nav.php");
+if (!has_role("Admin")) {
+    flash("You don't have permission to view this page", "warning");
+    redirect("home.php");
+}
 
 $db = getDB();
-//remove all associations
-if (isset($_GET["remove"])) {
-    $query = "DELETE FROM `UserShows` WHERE user_id = :user_id";
-    try {
-        $stmt = $db->prepare($query);
-        $stmt->execute([":user_id" => get_user_id()]);
-        flash("Successfully removed all shows", "success");
-    } catch (PDOException $e) {
-        error_log("Error removing broker associations: " . var_export($e, true));
-        flash("Error removing broker associations", "danger");
-    }
 
-    redirect("my_shows.php");
+// Check if a username is provided
+if (isset($_GET["username"])) {
+    $username = $_GET["username"];
+    // Get the user ID based on the provided username
+    $query = "SELECT id FROM Users WHERE username = :username";
+    $stmt = $db->prepare($query);
+    $stmt->execute([":username" => $username]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$user) {
+        // If user not found, handle the error (e.g., redirect or show a message)
+        flash("User not found", "danger");
+        redirect("admin/watchlist_associations.php");
+    }
+    // Use the user ID to associate the shows
+    $user_id = $user["id"];
+    // Fetch the username for customizing the title
+    $query = "SELECT username FROM Users WHERE id = :user_id";
+    $stmt = $db->prepare($query);
+    $stmt->execute([":user_id" => $user_id]);
+    $user_info = $stmt->fetch(PDO::FETCH_ASSOC);
+    $title_username = $user_info["username"];
+} else {
+    // If username is not provided, associate the shows with the logged-in user
+    $user_id = get_user_id();
+    // Fetch the username for customizing the title
+    $query = "SELECT username FROM Users WHERE id = :user_id";
+    $stmt = $db->prepare($query);
+    $stmt->execute([":user_id" => $user_id]);
+    $user_info = $stmt->fetch(PDO::FETCH_ASSOC);
+    $title_username = $user_info["username"];
 }
 
 //JN426 4/26/24
 
     //build search form
     $form = [
-        ["type" => "text", "name" => "username", "placeholder" => "Username", "label" => "Username", "include_margin" => false],
         ["type" => "text", "name" => "title", "placeholder" => "Show Title", "label" => "Show Title", "include_margin" => false],
         
         ["type" => "text", "name" => "imdb_rating", "placeholder" => "Show Rating", "label" => "Show Rating", "include_margin" => false],
@@ -41,10 +61,10 @@ $total_records = get_total_count("`Shows` b
 JOIN `UserShows` ub ON b.id = ub.show_id
 WHERE user_id = :user_id", [":user_id" => get_user_id()]);
 
-$query = "SELECT u.username, b.id, title, genres, imdb_id, imdb_rating, rated FROM `Shows` b
-JOIN `UserShows` ub ON b.id = ub.show_id JOIN Users u on u.id = ub.user_id";
-
-$params = [];
+$query = "SELECT b.id, title, genres, imdb_id, imdb_rating, rated FROM `Shows` b
+JOIN `UserShows` ub ON b.id = ub.show_id
+WHERE user_id=:user_id";
+$params = [":user_id" => get_user_id()];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
 if ($is_clear) {
@@ -69,15 +89,6 @@ if (count($_GET) > 0) {
             $form[$k]["value"] = $_GET[$v["name"]];
         }
     }
-
-     //username
-     $username = se($_GET, "username", "", false);
-     if (!empty($username)) {
-         $query .= " AND u.username like :username";
-         $params[":username"] = "%$username%";
-     }
-
-    
 
     //title
     $title = se($_GET, "title", "", false);
@@ -167,7 +178,7 @@ $table = [
 ?>
 
 <div class="container-fluid"> 
-    <h3>My Shows</h3>
+    <h3><?php echo htmlentities($title_username); ?>'s Shows</h3>
     <form method="GET">
         <div class="row mb-3" style="align-items: flex-end;">
 
@@ -181,7 +192,6 @@ $table = [
     
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
-        <a href="?remove" onclick="confirm('Are you sure')?'':event.preventDefault()" class="btn btn-danger">Remove All Shows</a>
         
     </form>
     <?php render_result_counts(count($results), $total_records); ?>
