@@ -124,6 +124,7 @@ if ($user_id > 0) {
 <?php if ($is_me && $is_edit) : ?>
         <a class="btn btn-secondary btn-sm" href="?">View</a>    
     <form method="POST" onsubmit="return validate(this);">
+    
         <?php render_input(["type" => "email", "id" => "email", "name" => "email", "label" => "Email", "value" => se($user, "email", "", false), "rules" => ["required" => true]]); ?>
         <?php render_input(["type" => "text", "id" => "username", "name" => "username", "label" => "Username", "value" => se($user, "username", "", false), "rules" => ["required" => true, "maxlength" => 30]]); ?>
         <!-- DO NOT PRELOAD PASSWORD -->
