@@ -82,6 +82,7 @@ session_start();
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/watchlist_associations.php'); ?>">Watchlist Associations</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/not_associated.php'); ?>">Unassociated Shows</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_shows.php'); ?>">Associate Shows to Users</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>

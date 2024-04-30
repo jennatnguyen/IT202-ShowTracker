@@ -39,7 +39,7 @@ error_log("Form data: " . var_export($form, true));
 $total_records = get_total_count("`Shows` b
 JOIN `UserShows` ub ON b.id = ub.show_id
 WHERE user_id = :user_id", [":user_id" => get_user_id()]);
-
+//JN426 4/26/24
 $query = "SELECT b.id, title, genres, imdb_id, imdb_rating, rated FROM `Shows` b
 JOIN `UserShows` ub ON b.id = ub.show_id
 WHERE user_id=:user_id";
@@ -94,13 +94,6 @@ if (count($_GET) > 0) {
         $params[":rated"] = "%$rated%";
     }
 
-     //sort and order
-   /* $sort = se($_GET, "sort", "date", false);
-    if (!in_array($sort, ["title", "genres", "imdb_rating", "rated"])) {
-        
-        $sort = "date";
-    }*/
-
     $sort = se($_GET, "sort", "created", false);
     if (!in_array($sort, ["title", "genres", "imdb_rating", "rated"])) {
         $sort = "created";
@@ -151,9 +144,8 @@ try {
 $table = [
     "data" => $results, "title" => "Latest Shows", "ignored_columns" => ["id","imdb_id"],
     "view_url" => get_url("single_view_show.php")
-  //  "edit_url" => get_url("admin/edit_show.php"),
-  //  "delete_url" => get_url("admin/delete_show.php")
 ];
+//JN426 4/30/24
 ?>
 
 <div class="container-fluid"> 

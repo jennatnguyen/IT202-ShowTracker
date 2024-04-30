@@ -19,4 +19,4 @@ try {
     error_log("Error deleting stock $id" . var_export($e, true));
     flash("Error deleting record", "danger");
 }
-redirect("my_shows.php");
+redirect("my_shows.php"); //jn426 4/24/30
