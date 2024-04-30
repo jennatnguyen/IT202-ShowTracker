@@ -34,3 +34,8 @@ function render_result_counts($result_count, $total_count)
 {
     include(__DIR__ . "/../partials/result_counts.php");
 }
+
+function render_all_users_show_card($show = array())
+{
+    include(__DIR__ . "/../partials/all_users_card.php");
+}

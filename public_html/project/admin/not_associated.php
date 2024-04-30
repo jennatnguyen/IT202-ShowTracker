@@ -1,7 +1,9 @@
 <?php
-
-require(__DIR__ . "/../../partials/nav.php");
-is_logged_in(true);
+require(__DIR__ . "/../../../partials/nav.php");
+if (!has_role("Admin")) {
+    flash("You don't have permission to view this page", "warning");
+    redirect("home.php");
+}
 
 //JN426 4/26/24
 
@@ -20,12 +22,10 @@ is_logged_in(true);
 
 error_log("Form data: " . var_export($form, true));
 
-$total_records = get_total_count("`Shows` b LEFT JOIN `UserShows` ub on b.id = ub.show_id");
+$total_records = get_total_count("`Shows` b WHERE b.id NOT IN (SELECT show_id FROM `UserShows`)");
 
-$query = "SELECT b.id, title, genres, imdb_id, imdb_rating, rated, ub.user_id
-FROM `Shows` b
-LEFT JOIN `UserShows` ub ON b.id = ub.show_id
-WHERE 1=1";
+$query = "SELECT s.id, title, imdb_id, imdb_rating, rated, genres FROM `Shows` s
+WHERE s.id NOT IN (SELECT show_id FROM `UserShows`) ";
 
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
@@ -126,10 +126,20 @@ try {
     flash("Unhandled error occurred", "danger");
 }
 //JN426 4/29/24
+$table = [
+    "data" => $results, "title" => "Shows", "ignored_columns" => ["id", "imdb_id"],
+    "view_url" => get_url("admin/view_show2.php"),
+];
 ?>
 
-<div class="container-fluid"> 
-    <h3>TV Shows</h3>
+<div class="container-fluid">
+    
+
+<div style="text-align: center;">
+    <h2>Unassociated Shows</h2>
+    <h5>Total Shows not on Watchlists: <?php echo $total_records; ?></h5>
+        <h5>Total Items On Page: <?php echo count($results); ?></h5>
+</div>
     <form method="GET">
         <div class="row mb-3" style="align-items: flex-end;">
 
@@ -140,22 +150,15 @@ try {
             <?php endforeach; ?>
 
         </div>
-    
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
-        <a href="<?php echo get_url("fetch_show.php"); ?>" class="btn btn-danger">Add Unavailable Show</a>
+  
         
     </form>
-    <?php render_result_counts(count($results), $total_records); ?>
-    <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
-        <?php foreach ($results as $show) : ?>
-            <div class="col">
-                <?php render_list_show_card($show); ?>
-            </div>
-        <?php endforeach; ?>
+    <?php render_table($table); ?>
 </div>
 
 <?php
 
-require_once(__DIR__ . "/../../partials/flash.php");
+require_once(__DIR__ . "/../../../partials/flash.php");
 ?>
