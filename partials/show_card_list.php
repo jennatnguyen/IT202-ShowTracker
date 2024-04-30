@@ -16,15 +16,11 @@ if (!isset($show)) {
 
             </div>
 
-            <?php if (!isset($show["user_id"]) || $show["user_id"] === "N/A") : ?>
+
                 <div class="card-body">
                     <a href="<?php echo get_url('api/add_show.php?show_id=' . $show["id"]); ?>" class="btn btn-success">Add to Watchlist</a>
                 </div>
-            <?php else : ?>
-                <div class="card-body">
-                    <div class="bg-warning text-dark text-center">Show Already Added</div>
-                </div>
-            <?php endif; ?>
+
         </div>
     </div>
 <?php endif; ?>

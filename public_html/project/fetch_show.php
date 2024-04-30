@@ -1,5 +1,5 @@
 <?php
-//note we need to go up 1 more directory
+
 require(__DIR__ . "/../../partials/nav.php");
 
 ?>
@@ -14,6 +14,9 @@ if (isset($_POST["action"])) {
     if ($title) {
         if ($action === "fetch") {
             $result = fetch_show_by_title($title);
+            
+            
+
             error_log("Data from API" . var_export($result, true));
             if ($result) {
                 $quote = $result;
@@ -26,7 +29,7 @@ if (isset($_POST["action"])) {
     try {
         //optional options for debugging and duplicate handling
         $opts =
-            ["debug" => true, "update_duplicate" => false, "columns_to_update" => []];
+            ["debug" => true, "update_duplicate" => true, "columns_to_update" => []];
         $result = insert("Shows", $quote, $opts);
         if (!$result) {
             flash("Unhandled error", "warning");
@@ -62,6 +65,6 @@ if (isset($_POST["action"])) {
     </div>
 
 <?php
-//note we need to go up 1 more directory
+
 require_once(__DIR__ . "/../../partials/flash.php");
 ?>

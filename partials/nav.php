@@ -74,9 +74,6 @@ session_start();
                         </ul>
                     </li>
                 <?php endif; ?>
-                <?php if (!has_role("Admin") && is_logged_in()) : ?>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo get_url('fetch_show.php'); ?>">Add Show</a></li>
-                <?php endif; ?>
                 <?php if (is_logged_in()) : ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('logout.php'); ?>">Logout</a></li>
                 <?php endif; ?>
