@@ -42,7 +42,7 @@ if (isset($_POST["action"])) {
         //optional options for debugging and duplicate handling
         //JN426 4/26/24
         $opts =
-            ["debug" => true, "update_duplicate" => false, "columns_to_update" => []];
+            ["debug" => true, "update_duplicate" => true, "columns_to_update" => []];
         $result = insert("Shows", $quote, $opts);
         if (!$result) {
             flash("Unhandled error", "warning");

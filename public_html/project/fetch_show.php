@@ -1,12 +1,7 @@
 <?php
-//note we need to go up 1 more directory
+
 require(__DIR__ . "/../../partials/nav.php");
 
-if (!has_role("Admin")) {
-    flash("You don't have permission to view this page", "warning");
-    //die(header("Location: $BASE_PATH" . "/home.php"));
-    redirect("home.php");
-}
 ?>
 
 <?php
@@ -19,6 +14,9 @@ if (isset($_POST["action"])) {
     if ($title) {
         if ($action === "fetch") {
             $result = fetch_show_by_title($title);
+            
+            
+
             error_log("Data from API" . var_export($result, true));
             if ($result) {
                 $quote = $result;
@@ -31,7 +29,7 @@ if (isset($_POST["action"])) {
     try {
         //optional options for debugging and duplicate handling
         $opts =
-            ["debug" => true, "update_duplicate" => false, "columns_to_update" => []];
+            ["debug" => true, "update_duplicate" => true, "columns_to_update" => []];
         $result = insert("Shows", $quote, $opts);
         if (!$result) {
             flash("Unhandled error", "warning");
@@ -57,7 +55,7 @@ if (isset($_POST["action"])) {
 //TODO handle manual create stock
 ?>
 <div class="container-fluid">
-    <h3>Fetch Show</h3>
+    <h3>Add Unavailable Show</h3>
     <div id="fetch" class="tab-target">
         <form method="POST">
             <?php render_input(["type" => "search", "name" => "title", "placeholder" => "Show Title","rules"=>["required" => "required"]]); ?>
@@ -67,6 +65,6 @@ if (isset($_POST["action"])) {
     </div>
 
 <?php
-//note we need to go up 1 more directory
+
 require_once(__DIR__ . "/../../partials/flash.php");
 ?>
