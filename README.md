@@ -11,7 +11,7 @@ A web application that allows users to create a watchlist of TV shows to track w
 
 # Engineering Details 🛠️
 - PHP, HTML/CSS, JavaScript, SQL
-- Bootstrap
+- Bootstrap JS
 - REST API (TV Database)
 
 # Screenshots 📷
