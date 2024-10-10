@@ -1,20 +1,20 @@
 # Show Tracker 📺
 
-# Pitch 🗣️
+## Pitch 🗣️
 A web application that allows users to create a watchlist of TV shows to track what they have watched.
 
-# Goals 💡
+## Goals 💡
 - Users will be able to register an account and login with that account, as well as update any account information.
 - Users will be able to add a show to their watchlist from the TV Show database or add a custom show if it is not in the database.
 - Users can view the shows in a list format and filter/sort according to title, audience, rating, and genre.
 - Users can manage their watchlist by viewing the TV Show information in an in-depth view, updating the information, or deleting it.
 
-# Engineering Details 🛠️
+## Engineering Details 🛠️
 - PHP, HTML/CSS, JavaScript, SQL
 - Bootstrap JS
 - REST API (TV Database)
 
-# Screenshots 📷
+## Screenshots 📷
 ![image](https://github.com/user-attachments/assets/aac2b315-4833-489c-b1f6-0da1d85ca242)
 ![image](https://github.com/user-attachments/assets/8a406807-d6b7-4888-bd73-6c0bf3615cb8)
 ![image](https://github.com/user-attachments/assets/71bb175d-9915-47e0-bab0-b064507e42cc)
